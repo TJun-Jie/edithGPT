@@ -1,41 +1,33 @@
-import React, { useState } from "react";
-import { addDoc, collection } from "firebase/firestore";
+import React from "react";
 import { firestore } from "../../../firebase";
-// import { CalendarEvent } from "..";
-
-interface FormEvent {
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-}
+import { Button, Container, Grid, TextField, Typography } from "@mui/material";
+import { addDoc, collection } from "firebase/firestore";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
 
 const AddEventPage: React.FC = () => {
-  const [formData, setFormData] = useState<FormEvent>({
-    title: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    location: "",
-  });
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [location, setLocation] = React.useState("");
+  const [startDate, setStartDate] = React.useState(dayjs());
+  const [endDate, setEndDate] = React.useState(dayjs());
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       await addDoc(collection(firestore, "event"), {
-        title: formData.title,
-        description: formData.description,
+        title: title,
+        description: description,
         startDate: {
-          seconds: new Date(formData.startDate).getTime() / 1000,
+          seconds: (startDate?.toDate().getTime() || 0) / 1000,
           nanoseconds: 0,
         },
         endDate: {
-          seconds: new Date(formData.endDate).getTime() / 1000,
+          seconds: (endDate?.toDate().getTime() || 0) / 1000,
           nanoseconds: 0,
         },
-        location: formData.location,
+        location: location,
       });
       alert("Event added successfully!");
     } catch (error) {
@@ -44,61 +36,74 @@ const AddEventPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4 text-black">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white rounded p-6 shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl mb-4">Add New Event</h2>
-
-        <label className="block mb-4">
-          Title:
-          <input
-            type="text"
-            value={formData.title}
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            className="mt-2 p-2 w-full border rounded"
-            required
-          />
-        </label>
-
-        <label className="block mb-4">
-          descriptoin:
-          <input
-            type="text"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            className="mt-2 p-2 w-full border rounded"
-            required
-          />
-        </label>
-
-        <label className="block mb-4">
-          lcoation:
-          <input
-            type="text"
-            value={formData.location}
-            onChange={(e) =>
-              setFormData({ ...formData, location: e.target.value })
-            }
-            className="mt-2 p-2 w-full border rounded"
-            required
-          />
-        </label>
-
-        {/* ... Other form fields for description, startDate, endDate, location ... */}
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 mt-4 rounded"
-        >
+    <div className="tw-h-screen">
+      <Container maxWidth="sm">
+        <Typography variant="h4" className="mb-4">
           Add Event
-        </button>
-      </form>
+        </Typography>
+
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Title"
+                variant="outlined"
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                multiline
+                rows={4}
+                label="Description"
+                variant="outlined"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <DateTimePicker
+                label="Start Date"
+                value={startDate}
+                onChange={(date, _context) => {
+                  if (date) setStartDate(date);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <DateTimePicker
+                label="End Date"
+                value={endDate}
+                onChange={(date, _context) => {
+                  if (date) setEndDate(date);
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Location"
+                variant="outlined"
+                onChange={(e) => setLocation(e.target.value)}
+                value={location}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button type="submit" variant="contained" color="primary">
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Container>
     </div>
   );
 };

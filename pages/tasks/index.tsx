@@ -3,6 +3,7 @@ import { firestore } from "../../firebase";
 import React, { useEffect, useState } from "react";
 import { get } from "http";
 import { getDocs } from "firebase/firestore";
+import { Button } from "@mui/material";
 
 const addCalendarEvent = (event: CalendarEvent) => {
   const ref = collection(firestore, "event"); // Firebase creates this automatically
@@ -71,28 +72,33 @@ const CalendarPage: React.FC = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-2xl font-bold mb-6 text-black">Upcoming Events</h1>
-      <ul className="bg-white rounded shadow-lg p-4">
+    <div className="tw-min-h-screen tw-bg-gray-100 tw-p-8">
+      <h1 className="tw-text-2xl tw-font-bold tw-mb-6 tw-text-black">
+        Upcoming Events
+      </h1>
+      <ul className="tw-bg-white tw-rounded tw-shadow-lg tw-p-4">
         {events.length === 0 && <p>No events found.</p>}
         {events.map((event) => (
           <li
             key={event?.id}
-            className="border-b border-gray-200 last:border-b-0 pb-4 mb-4 last:mb-0"
+            className="tw-border-b tw-border-gray-200 tw-last:border-b-0 tw-pb-4 tw-mb-4 tw-last:mb-0"
           >
-            <h2 className="text-xl font-semibold mb-2">{event?.title}</h2>
-            <p className="text-gray-600 mb-2">{event?.description}</p>
-            <p className="text-sm text-gray-500">
-              <span className="font-medium">Start:</span>{" "}
+            <h2 className="tw-text-xl tw-font-semibold tw-mb-2">
+              {event?.title}
+            </h2>
+            <p className="tw-text-gray-600 tw-mb-2">{event?.description}</p>
+            <p className="tw-text-sm tw-text-gray-500">
+              <span className="tw-font-medium">Start:</span>{" "}
               {event?.startDate.toLocaleString()}
             </p>
-            <p className="text-sm text-gray-500">
-              <span className="font-medium">End:</span>{" "}
+            <p className="tw-text-sm tw-text-gray-500">
+              <span className="tw-font-medium">End:</span>{" "}
               {event?.endDate.toLocaleString()}
             </p>
             {event?.location && (
-              <p className="text-sm text-gray-500">
-                <span className="font-medium">Location:</span> {event?.location}
+              <p className="tw-text-sm tw-text-gray-500">
+                <span className="tw-font-medium">Location:</span>{" "}
+                {event?.location}
               </p>
             )}
           </li>

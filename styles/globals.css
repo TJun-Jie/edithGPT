@@ -60,3 +60,6 @@ button {
 button:hover {
   background-color: #0058c8;
 }
+* {
+  box-sizing: border-box;
+}

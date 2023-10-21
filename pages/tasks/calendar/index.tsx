@@ -6,20 +6,20 @@ const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const CalendarGridView: React.FC = () => {
   return (
-    <div className="flex flex-col bg-gray-100 p-6 rounded-lg shadow-md overflow-x-auto text-black">
+    <div className="flex flex-col bg-gray-100 p-6 rounded-lg shadow-md overflow-x-auto text-black h-screen">
       <div className="grid grid-cols-25 w-full">
         {/* Hour Labels */}
         <div className=" flex flex-row border-r w-full justify-between align-center border-b-2">
-          <div className="w-[50px]"></div>
-          <div className=" flex row item-center w-full ">
+          <div className="h-12 flex items-center justify-start w-[50px]"></div>
+          <div className=" flex row item-center w-full justify-between ">
             {daysOfWeek.map((day) => (
               <div
                 key={day}
-                className="w-[200px] flex justify-between text-center border-l-2 "
+                className="w-[200px] flex justify-center text-center"
               >
                 {/* Content for each hour can be added here */}
-                <div className="w-[200px] h-12 ">
-                  {/* Content for each hour can be added here */}
+                {/* Content for each hour can be added here */}
+                <div className="w-full h-12 border-l-2 border-gray-200">
                   {day}
                 </div>
               </div>
@@ -27,7 +27,7 @@ const CalendarGridView: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between border-r-2 pr-2">
+        <div className="flex flex-col justify-between border-r-2">
           {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
             <div key={hour} className=" flex row items-center">
               <div className="h-12 flex items-center justify-start w-[50px]">
@@ -36,7 +36,7 @@ const CalendarGridView: React.FC = () => {
               <div className=" flex row item-center w-full justify-between">
                 {Array.from({ length: 7 }, (_, i) => i).map((day) => (
                   <div
-                    className="w-[200px] flex jsutify-center text-center"
+                    className="w-[200px] flex justify-center text-center"
                     key={day}
                   >
                     {/* Content for each hour can be added here */}
