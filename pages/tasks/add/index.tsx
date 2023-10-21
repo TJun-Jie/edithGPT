@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
 import { firestore } from "../../../firebase";
-import { CalendarEvent } from "..";
+// import { CalendarEvent } from "..";
 
 interface FormEvent {
   title: string;
