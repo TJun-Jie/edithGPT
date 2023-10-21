@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { get } from "http";
 import { getDocs } from "firebase/firestore";
 import { Button } from "@mui/material";
+import { CalendarEvent } from "@/edith/components/CalendarItem";
 
 const addCalendarEvent = (event: CalendarEvent) => {
   const ref = collection(firestore, "event"); // Firebase creates this automatically
@@ -18,15 +19,6 @@ const addCalendarEvent = (event: CalendarEvent) => {
     console.log(err);
   }
 };
-
-export interface CalendarEvent {
-  id: string;
-  title: string;
-  description?: string;
-  startDate: Date;
-  endDate: Date;
-  location?: string;
-}
 
 const exampleEvent: CalendarEvent = {
   id: "ABC1234567", // This is a placeholder ID; Firebase will generate a unique ID when adding the event
