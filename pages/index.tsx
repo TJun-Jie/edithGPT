@@ -1,16 +1,24 @@
-import { useState } from 'react';
-import { auth } from './firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
+import { OAuthProvider, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from 'next/router';
+import { auth } from '../firebase.js';
+import React, { useState } from 'react';
 
 export default function Home() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const router = useRouter();
+
+    // No need to redefine auth as it's already imported from firebase.js
+    const googleProvider = new GoogleAuthProvider();
+    const appleProvider = new OAuthProvider('apple.com');
+    const githubProvider = new GithubAuthProvider();
 
     const handleSignup = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
             setMessage('User created successfully!');
+            router.push('/dashboard');  // Redirect to the dashboard page
         } catch (error) {
             setMessage(error.message);
         }
@@ -20,99 +28,70 @@ export default function Home() {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             setMessage('Logged in successfully!');
+            router.push('/dashboard');  // Redirect to the dashboard page
         } catch (error) {
             setMessage(error.message);
         }
     };
 
     // Implementing Google Sign-in:
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-
     const signInWithGoogle = async () => {
+        const googleProvider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            console.log("Signed in as:", user.displayName);
+          const result = await signInWithPopup(auth, googleProvider);
+          const user = result.user;
+          console.log("Signed in as:", user.displayName);
+          setMessage('Logged in successfully!'); // Optional: Display success message
+          router.push('/dashboard');
         } catch (error) {
-            console.error("Error signing in with Google:", error);
+          console.error("Error signing in with Google:", error);
+          setMessage(error.message);
         }
-    };
+      };
 
     // Implementing Apple Sign-in:
-    import { getAuth, OAuthProvider, signInWithPopup } from "firebase/auth";
-
-    const auth = getAuth();
-    const provider = new OAuthProvider('apple.com');
-
     const signInWithApple = async () => {
         try {
-            const result = await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, appleProvider);
             const user = result.user;
             console.log("Signed in as:", user.displayName);
+            router.push('/dashboard');
         } catch (error) {
             console.error("Error signing in with Apple:", error);
         }
     };
 
+    const signInWithGithub = async () => {
+      try {
+        const result = await signInWithPopup(auth, githubProvider);
+        const user = result.user;
+        console.log("Signed in as:", user.displayName);
+        router.push('/dashboard');  // Redirect to the dashboard page
+      } catch (error) {
+        console.error("Error signing in with GitHub:", error);
+      }
+    };
+
     return (
-        <div className="min-h-screen flex flex-col justify-center bg-gray-100">
-            <div className="mx-auto p-8 max-w-md bg-white rounded-lg shadow-md">
-                <h1 className="text-2xl font-semibold mb-4 text-gray-700">Welcome to Edith, the fire of planning!</h1>
+        <div className="min-h-screen flex flex-col justify-center bg-white">
+            <div className="mx-auto p-10 max-w-md rounded-lg shadow-xl transition-transform transform hover:scale-105">
+                <h1 className="text-3xl font-semibold mb-6 text-gray-800 text-center">Welcome to Edith, the fire of planning!</h1>
 
-                <div className="space-y-4">
-                    <input
-                        className="w-full p-3 rounded border border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                <div className="space-y-6">
 
-                    <input
-                        className="w-full p-3 rounded border border-gray-300 focus:outline-none focus:border-indigo-500"
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <button className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-800 p-4 rounded hover:bg-gray-200 transition-transform transform hover:scale-105" onClick={signInWithGoogle}>
+                        <img src="/google-icon.svg" alt="Google Logo" className="w-6 h-6 mr-3" />
+                        Sign in with Google
+                    </button>
 
-                    <div className="flex space-x-4">
-                        <button
-                            className="flex-1 bg-black text-white p-3 rounded hover:bg-gray-800 transition"
-                            onClick={handleSignup}
-                        >
-                            Create Account
-                        </button>
+                    <button
+                        className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-800 p-4 rounded hover:bg-gray-200 transition-transform transform hover:scale-105"
+                        onClick={signInWithGithub}>
+                        <img src="/github-mark.svg" alt="Github Logo" className="w-6 h-6 mr-3" />
+                        Sign in with Github
+                    </button>
 
-                        <button
-                            className="flex-1 bg-white border border-black text-black p-3 rounded hover:bg-gray-200 transition"
-                            onClick={handleLogin}
-                        >
-                            Log in
-                        </button>
-                    </div>
-
-                    {/* Google and Apple sign-in buttons */}
-                    <div className="flex space-x-4 mt-4">
-                        <button
-                            className="flex-1 bg-blue-600 text-white p-3 rounded hover:bg-blue-700 transition"
-                            onClick={signInWithGoogle}
-                        >
-                            Sign in with Google
-                        </button>
-
-                        <button
-                            className="flex-1 bg-black text-white p-3 rounded hover:bg-gray-800 transition"
-                            onClick={signInWithApple}
-                        >
-                            Sign in with Apple
-                        </button>
-                    </div>
-
-                    {message && <p className="mt-4 text-red-500">{message}</p>}
+                    {message && <p className="mt-6 text-red-600 font-medium">{message}</p>}
                 </div>
             </div>
         </div>
