@@ -26,7 +26,7 @@ export default function Home() {
       await createUserWithEmailAndPassword(auth, email, password);
       setMessage("User created successfully!");
       router.push("/dashboard"); // Redirect to the dashboard page
-    } catch (error) {
+    } catch (error: any) {
       setMessage(error.message);
     }
   };
@@ -36,7 +36,7 @@ export default function Home() {
       await signInWithEmailAndPassword(auth, email, password);
       setMessage("Logged in successfully!");
       router.push("/dashboard"); // Redirect to the dashboard page
-    } catch (error) {
+    } catch (error: any) {
       setMessage(error.message);
     }
   };
@@ -50,7 +50,7 @@ export default function Home() {
       console.log("Signed in as:", user.displayName);
       setMessage("Logged in successfully!"); // Optional: Display success message
       router.push("/dashboard");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with Google:", error);
       setMessage(error.message);
     }
