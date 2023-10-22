@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import Image from "next/image";
+import Link from "next/link";
 
 const pages = ["Calendar", "Dashboard"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -129,7 +130,7 @@ function ResponsiveAppBar() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                <Link href={`${page.toLocaleLowerCase()}`}>{page}</Link>
               </Button>
             ))}
           </Box>
